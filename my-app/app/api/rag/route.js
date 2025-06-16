@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { loadDocuments } from '../../../lib/documentLoader'
 import { generateResponse } from '../../../lib/gemini'
+import { getVectorStore } from '../../../lib/vectorStore'
 
 export async function POST(request) {
   try {
@@ -21,8 +22,17 @@ export async function POST(request) {
       )
     }
 
-    const documents = await loadDocuments()
-    const context = documents.map(doc => doc.content).join('\n\n')
+    // Charger les documents si nécessaire (première exécution)
+    await loadDocuments()
+    
+    // Rechercher les documents pertinents avec le vectorStore
+    const vectorStore = await getVectorStore()
+    const relevantDocs = await vectorStore.similaritySearch(question, 3)
+    
+    // Extraire le contenu des documents pertinents
+    const context = relevantDocs.map(doc => doc.pageContent).join('\n\n')
+    
+    // Générer une réponse basée sur les documents pertinents
     const answer = await generateResponse(question, context)
 
     return NextResponse.json({ answer })

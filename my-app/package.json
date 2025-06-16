@@ -10,8 +10,12 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.8.0",
+    "@langchain/community": "^0.3.46",
+    "@langchain/google-genai": "^0.2.12",
     "docx": "^8.5.0",
     "docx-parser": "^0.2.1",
+    "hnswlib-node": "^3.0.0",
+    "langchain": "^0.3.28",
     "mammoth": "^1.9.1",
     "next": "15.3.3",
     "office-text-extractor": "^3.0.3",
